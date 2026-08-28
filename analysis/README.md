@@ -15,6 +15,7 @@ npm run validate      # valida parser e outputs
 npm run perfil        # perfis e bairros (receita / diária)
 npm run compactos     # comparação dos compactos no Centro
 npm run vivareal      # custo de aquisição (VivaReal) e ROI bruto por perfil
+npm run ranking       # ranking final com corte mínimo de amostra
 ```
 
 ## Estrutura

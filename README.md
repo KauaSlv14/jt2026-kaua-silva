@@ -94,6 +94,9 @@ npm run vivareal      # custo de aquisição (VivaReal) e ROI por perfil
 npm run ranking       # ranking final com amostra mínima
 ```
 
+> **Windows PowerShell:** caso `npm` seja bloqueado pela política de execução
+> do `npm.ps1`, use `npm.cmd run <comando>` ou execute os comandos pelo CMD/Git Bash.
+
 Os outputs são gravados em `analysis/output/`. O pipeline é **reprodutível**:
 rodar os scripts na ordem acima regenera os mesmos resultados.
 
@@ -107,7 +110,9 @@ rodar os scripts na ordem acima regenera os mesmos resultados.
 ├── README.md                    # Este arquivo
 ├── analysis/
 │   ├── README.md                # Documentação técnica detalhada
-│   ├── lib/csv.js               # Parser CSV robusto (RFC 4180)
+│   ├── lib/
+│   │   ├── csv.js               # Parser CSV robusto (RFC 4180)
+│   │   └── table.js             # Formatação da saída no terminal
 │   ├── consolidate.js           # Consolidação do Price_AV (snapshot 2025-01-20)
 │   ├── profile_analysis.js      # Bairros e perfis por diária
 │   ├── compact_centro.js        # Compactos no Centro vs outros perfis
@@ -115,7 +120,8 @@ rodar os scripts na ordem acima regenera os mesmos resultados.
 │   ├── ranking_roi.js           # Ranking final (apartamentos, amostra mínima)
 │   ├── validate.js              # Validações automáticas
 │   └── output/                  # Resultados processados (CSV/JSON)
-├── ai-log/                      # Conversas com a IA (em texto) — a preencher
+├── ai-log/
+│   └── opencode-session-completa.json   # Sessão completa exportada do OpenCode
 └── data/                        # Base de dados original (Airbnb + VivaReal)
 ```
 
