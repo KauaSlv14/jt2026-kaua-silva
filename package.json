@@ -1,0 +1,15 @@
+{
+  "name": "itapema-investiment-analysis",
+  "version": "1.0.0",
+  "description": "Análise do mercado imobiliário de Itapema (SC) para o Hackathon Jovens Talentos AI Builder 2026 - Seazone",
+  "type": "commonjs",
+  "scripts": {
+    "consolidate": "node analysis/consolidate.js",
+    "validate": "node analysis/validate.js",
+    "perfil": "node analysis/profile_analysis.js",
+    "compactos": "node analysis/compact_centro.js",
+    "vivareal": "node analysis/vivareal_analysis.js",
+    "ranking": "node analysis/ranking_roi.js"
+  },
+  "license": "MIT"
+}
