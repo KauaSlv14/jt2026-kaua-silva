@@ -17,6 +17,7 @@
 
 const path = require('path');
 const { readCSV, writeCSV, escCSV } = require('./lib/csv');
+const { printTable, fmtBRL } = require('./lib/table');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const OUT_DIR = path.join(__dirname, 'output');
@@ -114,10 +115,14 @@ function main() {
 
   function print(dimTitle, arr) {
     console.log(`\n=== ${dimTitle} (por mediana de diária) ===`);
-    console.log(['grupo','n','media','mediana','p25','p75'].map(h=>h.padEnd(22)).join(''));
-    for (const r of arr) {
-      console.log([r.grupo, r.n, r.media, r.mediana, r.p25, r.p75].map((v)=>String(v).padEnd(22)).join(''));
-    }
+    printTable([
+      { key: 'grupo', header: 'Grupo', align: 'left' },
+      { key: 'n', header: 'N', align: 'right' },
+      { key: 'media', header: 'Média', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+      { key: 'mediana', header: 'Mediana', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+      { key: 'p25', header: 'P25', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+      { key: 'p75', header: 'P75', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+    ], arr);
   }
   print('BAIRROS', topBairro);
   print('Nº DE QUARTOS', topPerfil);

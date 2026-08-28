@@ -23,6 +23,7 @@
 
 const path = require('path');
 const { readCSV, writeCSV } = require('./lib/csv');
+const { printTable, fmtBRL, fmtPct } = require('./lib/table');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const OUT_DIR = path.join(__dirname, 'output');
@@ -153,10 +154,14 @@ writeCSV(path.join(OUT_DIR, 'vivareal_roi.csv'), rows);
 
 // ---- Print ordenado pelo ROI (occ50) ----
 const sorted = rows.slice().sort((a, b) => (Number(b.roi_bruto_occ50) || 0) - (Number(a.roi_bruto_occ50) || 0));
-console.log(['perfil','nViva','preco_med','nAir','diaria_med','R40','ROI40%','ROI50%','ROI60%'].map((h) => h.padEnd(16)).join(''));
-for (const r of sorted) {
-  console.log([
-    r.perfil, r.n_vivareal, r.preco_mediana, r.n_airbnb, r.diaria_mediana,
-    r.receita_anual_occ40, r.roi_bruto_occ40, r.roi_bruto_occ50, r.roi_bruto_occ60,
-  ].map((v) => String(v).padEnd(16)).join(''));
-}
+printTable([
+  { key: 'perfil', header: 'Perfil', align: 'left' },
+  { key: 'n_vivareal', header: 'N VivaReal', align: 'right' },
+  { key: 'preco_mediana', header: 'Preço mediano', align: 'right', fmt: (v) => fmtBRL(v, 0) },
+  { key: 'n_airbnb', header: 'N Airbnb', align: 'right' },
+  { key: 'diaria_mediana', header: 'Diária mediana', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+  { key: 'receita_anual_occ40', header: 'Receita 40%', align: 'right', fmt: (v) => fmtBRL(v, 0) },
+  { key: 'roi_bruto_occ40', header: 'ROI 40%', align: 'right', fmt: (v) => fmtPct(v) },
+  { key: 'roi_bruto_occ50', header: 'ROI 50%', align: 'right', fmt: (v) => fmtPct(v) },
+  { key: 'roi_bruto_occ60', header: 'ROI 60%', align: 'right', fmt: (v) => fmtPct(v) },
+], sorted);

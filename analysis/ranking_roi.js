@@ -14,6 +14,7 @@
 
 const path = require('path');
 const { readCSV, writeCSV } = require('./lib/csv');
+const { printTable, fmtBRL, fmtPct } = require('./lib/table');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const OUT_DIR = path.join(__dirname, 'output');
@@ -130,26 +131,32 @@ writeCSV(path.join(OUT_DIR, 'ranking_roi.csv'), rows);
 
 // ---- Print ----
 console.log(`Corte de amostra mínima Airbnb: >= ${MIN_AIRBNB_SAMPLE_ACTIVE} imóveis`);
-console.log(
-  ['perfil', 'passa', 'nAir', 'nViva', 'diaria_med', 'preco_med', 'ROI40%', 'ROI50%', 'ROI60%']
-    .map((h) => h.padEnd(24)).join('')
-);
 const sorted = rows
   .slice()
   .filter((r) => r.passa_amostra_minima === 'sim')
   .sort((a, b) => (Number(b.roi_bruto_occ50) || 0) - (Number(a.roi_bruto_occ50) || 0));
-for (const r of sorted) {
-  console.log([
-    r.perfil, r.passa_amostra_minima, r.n_airbnb, r.n_vivareal, r.diaria_mediana, r.preco_mediana,
-    r.roi_bruto_occ40, r.roi_bruto_occ50, r.roi_bruto_occ60,
-  ].map((v) => String(v).padEnd(24)).join(''));
-}
+printTable([
+  { key: 'perfil', header: 'Perfil', align: 'left' },
+  { key: 'passa_amostra_minima', header: 'Passa corte', align: 'left' },
+  { key: 'n_airbnb', header: 'N Airbnb', align: 'right' },
+  { key: 'n_vivareal', header: 'N VivaReal', align: 'right' },
+  { key: 'diaria_mediana', header: 'Diária mediana', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+  { key: 'preco_mediana', header: 'Preço mediano', align: 'right', fmt: (v) => fmtBRL(v, 0) },
+  { key: 'roi_bruto_occ40', header: 'ROI 40%', align: 'right', fmt: (v) => fmtPct(v) },
+  { key: 'roi_bruto_occ50', header: 'ROI 50%', align: 'right', fmt: (v) => fmtPct(v) },
+  { key: 'roi_bruto_occ60', header: 'ROI 60%', align: 'right', fmt: (v) => fmtPct(v) },
+], sorted);
 
 // Opções que passaram no corte e ficaram fora (referência)
 const out = rows.filter((r) => r.passa_amostra_minima === 'nao');
 if (out.length) {
   console.log('\n--- Opções EXCLUÍDAS por amostra mínima (referência) ---');
-  for (const r of out) {
-    console.log(`${r.perfil}: nAir=${r.n_airbnb} nViva=${r.n_vivareal} diaria=${r.diaria_mediana} preco=${r.preco_mediana} ROI50=${r.roi_bruto_occ50}`);
-  }
+  printTable([
+    { key: 'perfil', header: 'Perfil', align: 'left' },
+    { key: 'n_airbnb', header: 'N Airbnb', align: 'right' },
+    { key: 'n_vivareal', header: 'N VivaReal', align: 'right' },
+    { key: 'diaria_mediana', header: 'Diária mediana', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+    { key: 'preco_mediana', header: 'Preço mediano', align: 'right', fmt: (v) => fmtBRL(v, 0) },
+    { key: 'roi_bruto_occ50', header: 'ROI 50%', align: 'right', fmt: (v) => fmtPct(v) },
+  ], out);
 }

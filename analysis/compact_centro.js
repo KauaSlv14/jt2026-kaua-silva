@@ -22,6 +22,7 @@
 
 const path = require('path');
 const { readCSV, writeCSV } = require('./lib/csv');
+const { printTable, fmtBRL } = require('./lib/table');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const OUT_DIR = path.join(__dirname, 'output');
@@ -110,12 +111,15 @@ function main() {
   writeCSV(path.join(OUT_DIR, 'comparacao_compactos_centro.csv'), rows);
 
   const sorted = rows.slice().sort((a, b) => (b.mediana || 0) - (a.mediana || 0));
-  console.log(['grupo', 'n', 'media', 'mediana', 'p25', 'p75', 'R50/ano'].map((h) => h.padEnd(34)).join(''));
-  for (const r of sorted) {
-    console.log([
-      r.grupo, r.n, r.media, r.mediana, r.p25, r.p75, r.receita_anual_occ50,
-    ].map((v) => String(v).padEnd(34)).join(''));
-  }
+  printTable([
+    { key: 'grupo', header: 'Grupo', align: 'left' },
+    { key: 'n', header: 'N', align: 'right' },
+    { key: 'media', header: 'Média diária', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+    { key: 'mediana', header: 'Mediana diária', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+    { key: 'p25', header: 'P25', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+    { key: 'p75', header: 'P75', align: 'right', fmt: (v) => fmtBRL(v, 2) },
+    { key: 'receita_anual_occ50', header: 'Receita anual (50%)', align: 'right', fmt: (v) => fmtBRL(v, 0) },
+  ], sorted);
 }
 
 main();
